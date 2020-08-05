@@ -12,9 +12,7 @@
 {% if employees %}
     <ul>
     {% for employee in employees %}
-        {% if 'X' in employee.name %}
-            <li>{{ employee.name }}</li>
-        {% endif %}
+        <li>{{ employee.name }}</li>
     {% endfor %}
     </ul>
 {% else %}
