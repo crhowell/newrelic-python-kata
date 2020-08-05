@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  django_web:
+    container_name: newrelic_app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_ENGINE=django.db.backends.postgresql
+      - DB_NAME=newrelic
+      - DB_USER=newrelic
+      - DB_PASS=supersecretpassword
+      - DB_HOST=app_db
+      - DB_PORT=5432
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - app_db
+
+  app_db:
+    container_name: newrelic_db
+    image: postgres
+    ports:
+      - 5432
+    environment:
+      - POSTGRES_DB=newrelic
+      - POSTGRES_USER=newrelic
+      - POSTGRES_PASSWORD=supersecretpassword

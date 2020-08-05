@@ -1,24 +1,14 @@
 from random import randint
 from os import environ
 
-import requests 
-
-
-def setup_postgression():
-    url = 'http://api.postgression.com'
-    db_url = requests.get(url).text
-    with open('db_url.txt', 'w') as f:
-        f.write(db_url)
+import django
 
 def run_django_commands(*args):
-    environ.setdefault("DJANGO_SETTINGS_MODULE", "newrelic_python_kata.settings")
-    from django.core.management import call_command
     for command in args:
         call_command(command, interactive=False)
 
+
 def populate_db():
-    environ.setdefault("DJANGO_SETTINGS_MODULE", "newrelic_python_kata.settings")
-    from employees.models import Employee, BioData, Payroll
     with open('names.txt') as f: 
         es = []
         bs = []
@@ -31,18 +21,28 @@ def populate_db():
             es.append(e)
             bs.append(b)
             ps.append(p)
+    try:
+        Employee.objects.bulk_create(es)
+        BioData.objects.bulk_create(bs)
+        Payroll.objects.bulk_create(ps)
+    except IntegrityError:
+        pass
 
-    Employee.objects.bulk_create(es)
-    BioData.objects.bulk_create(bs)
-    Payroll.objects.bulk_create(ps)
-            
+
 if __name__ == '__main__':
-    print 'INFO: Setting up Postgression'
-    setup_postgression()
-    print 'INFO: Setting up Django DB'
-    run_django_commands('syncdb')
-    print 'INFO: Populating the database.'
+    environ.setdefault("DJANGO_SETTINGS_MODULE", "newrelic_python_kata.settings")
+    django.setup()
+
+    from employees.models import Employee, BioData, Payroll
+    from django.core.management import call_command
+    from django.db import IntegrityError
+    from employees import models
+
+    # print('INFO: Setting up Django DB')
+    # run_django_commands('makemigrations')
+    # run_django_commands('migrate')
+    # print('INFO: Populating the database.')
     populate_db()
-    print 'INFO: All done!'
-    print 'INFO: Start your server.'
-    print 'newrelic-admin run-python manage.py run_gunicorn'
+    print('INFO: All done!')
+    print('INFO: Start your server.')
+    print('newrelic-admin run-python manage.py run_gunicorn')
