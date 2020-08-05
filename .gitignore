@@ -16,3 +16,7 @@ build
 
 # Logs:
 *.log
+# newrelic config
+newrelic.ini
+staticfiles/
+.vscode/

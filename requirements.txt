@@ -1,8 +1,9 @@
-django==1.5
-requests
-gunicorn
-pywapi
-dj-database-url
-#boom
-psycopg2
-newrelic
+asgiref==3.2.10
+Django==3.0.8
+gunicorn==20.0.4
+newrelic==5.14.1.144
+psycopg2==2.8.5
+pytz==2020.1
+https://launchpad.net/python-weather-api/trunk/0.3.8/+download/pywapi-0.3.8.tar.gz
+sqlparse==0.3.1
+whitenoise==5.1.0
